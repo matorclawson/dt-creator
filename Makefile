@@ -14,7 +14,7 @@ SITE_DIR ?= site
 help:
 	@echo "ZEO Creator — capability package diagnostics"
 	@echo ""
-	@echo "  make setup          Install the exact locked environment"
+	@echo "  make setup          Install the exact locked environment and enable the pre-push gate"
 	@echo "  make verify         Lint, strict type-check, and test"
 	@echo "  make doctor         Verify Python/Zeocore/manifests/projections"
 	@echo "  make capabilities   List the public capability catalog"
@@ -27,6 +27,7 @@ help:
 	@echo "  make install VERSION=X.Y.Z  Install that PyPI release as a tool, then run doctor"
 
 setup: sync
+	@git rev-parse --git-dir >/dev/null 2>&1 && git config core.hooksPath .githooks || true
 
 # Installs a published release, never this checkout. Rollback is the same target
 # with the previous version.

@@ -42,7 +42,8 @@ returns a result with an error code, never a partial effect.
 `make verify` is the whole gate (lint, types, tests, reference artifacts, docs, wheel). Run
 `make doctor` too. Both are slow (about 4 minutes), so run them once before a pull request, not in
 a loop. To keep builds out of the checkout, set `DIST_DIR` and `SITE_DIR` (and `TMPDIR`) to a
-scratch directory first.
+scratch directory first. `make setup` also enables a committed pre-push hook (`.githooks/pre-push`)
+that runs `make verify` before any push that creates or updates a branch.
 
 ## Never
 - Add credentials, OAuth, provider SDKs, scheduling, workflow state, rendering or provider writes.
