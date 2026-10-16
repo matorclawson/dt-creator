@@ -49,6 +49,8 @@ Observer record inputs and port results must use own data properties. Accessors 
 
 Observer arrays are also captured from own index data-property descriptors into fresh frozen arrays before validation or iteration. Sparse arrays, accessor indices and extra array properties refuse without invoking element getters. This covers source/coverage paths, plan/group lists, expected artifacts, policy origins/formats and normalized head elements. As with records, arbitrary caller code/proxy effects are not sandboxed.
 
+Observer options, manifest and inventory containers also require own data-property snapshots and reject unknown keys. Options accept only manifest/headPlan/artifactGroups/limits/attestCoverage/readHead/readArtifact; manifest accepts inventory/pages; inventory accepts evaluatedAt/entries. This closes typo/accessor gaps before any port runs; it is not authentication of source provenance.
+
 
 createPublicationHeadElements(expected, {twitterCard, robots}) returns fresh frozen HeadElement records from a manifest PageExpectation. Both policy strings are mandatory, with no defaults. Source title/description/card/robots text is neither trimmed, escaped nor rewritten; only nonempty, well-formed strings are accepted. URLs must be HTTPS without credentials; canonical URLs exclude query/fragment delimiters. Robots must agree with source indexability (noindex/none only for a non-indexable page; conflicting index/noindex refuses). Inputs require exact own data properties; accessor fields are rejected without invoking them. Malformed inputs fail with a content-free TypeError. Internal field shapes and robots interpretation are shared with the audit, with no added public export besides this function and its declaration.
 

@@ -32,9 +32,11 @@ const freezeArray=values=>Object.freeze(values);
 export function createStaticPublicationObserver(options) {
   let plan,groups,attestCoverage,readHead,readArtifact,paths;
   try {
+    options=dataRecord(options,['manifest','headPlan','artifactGroups','limits','attestCoverage','readHead','readArtifact']);
     ({attestCoverage,readHead,readArtifact}=options);
     if(![attestCoverage,readHead,readArtifact].every(port=>typeof port==='function')) refuse('invalid-observer-config');
-    const {manifest}=options;
+    const manifest=dataRecord(options.manifest,['inventory','pages']);
+    dataRecord(manifest.inventory,['evaluatedAt','entries']);
     const pages=dataArray(manifest?.pages),headPlan=dataArray(options.headPlan),artifactGroups=dataArray(options.artifactGroups);
     const limits=dataRecord(options.limits,['maxPages','maxArtifacts']);
     if(!record(limits) || !positive(limits.maxPages) || !positive(limits.maxArtifacts)) refuse('invalid-observer-config');
