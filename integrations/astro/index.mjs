@@ -23,3 +23,5 @@ export function createPublicationManifest({site, documents, projection, describe
 export {createAstroPublicationIntegration,PublicationBuildError} from './hook.mjs';
 
 export {createStaticPublicationObserver} from './observer.mjs';
+
+export {createPublicationHeadElements} from './quality/head-elements.mjs';

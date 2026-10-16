@@ -1,4 +1,5 @@
 // Pure contract over normalized HTML head observations. No parsing or site defaults.
+import {headFields,robotsState} from './head-fields.mjs';
 export function auditPageHead(elements, expected, policy) {
   const textKeys = ['canonical','title','description','image'];
   if (!Array.isArray(elements) || !expected || !textKeys.every(k => typeof expected[k] === 'string' && expected[k].trim()) ||
@@ -20,19 +21,16 @@ export function auditPageHead(elements, expected, policy) {
     for (const value of values) if (typeof value !== 'string' || !value.trim()) add('empty',field);
     else if (value !== wanted) add('mismatch',field);
   };
-  one('title',elements.filter(e=>e.tag==='title').map(e=>e.text),expected.title);
-  one('canonical',elements.filter(e=>e.tag==='link' && e.attrs.rel?.toLowerCase().split(/\s+/).includes('canonical')).map(e=>e.attrs.href),expected.canonical);
-  for (const [key,value] of [
-    ['description',expected.description],['og:title',expected.title],['og:description',expected.description],
-    ['og:url',expected.canonical],['og:image',expected.image],['twitter:title',expected.title],
-    ['twitter:description',expected.description],['twitter:image',expected.image],['twitter:card',policy.twitterCard],
-  ]) one(key,meta(key),value);
+  for(const shape of headFields) {
+    const values=shape.tag==='title'?elements.filter(e=>e.tag==='title').map(e=>e.text):
+      shape.tag==='link'?elements.filter(e=>e.tag==='link' && e.attrs.rel?.toLowerCase().split(/\s+/).includes('canonical')).map(e=>e.attrs.href):meta(shape.field);
+    one(shape.field,values,shape.source==='twitterCard'?policy.twitterCard:expected[shape.source]);
+  }
   const robots = meta('robots');
   if (robots.length > 1) add('duplicate','robots');
-  const tokens = robots.flatMap(value=>typeof value === 'string' ? value.toLowerCase().split(/[\s,]+/) : []);
   if (robots.some(value=>typeof value !== 'string' || !value.trim())) add('empty','robots');
-  const blocked = tokens.includes('noindex') || tokens.includes('none');
+  const {blocked,conflicting}=robotsState(robots);
   if (blocked === expected.indexable) add('indexability','robots');
-  if ((tokens.includes('index') || tokens.includes('all')) && blocked) add('conflicting','robots');
+  if (conflicting) add('conflicting','robots');
   return findings;
 }

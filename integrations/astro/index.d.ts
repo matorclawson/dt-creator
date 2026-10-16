@@ -49,3 +49,6 @@ export interface StaticObserverOptions {
   readonly readArtifact:(context:AstroPublicationBuildContext,reference:string)=>Omit<ObservedArtifact,'url'>|Promise<Omit<ObservedArtifact,'url'>>;
 }
 export declare function createStaticPublicationObserver(options:StaticObserverOptions):(context:AstroPublicationBuildContext)=>Promise<BuildObservations>;
+
+export interface PublicationHeadElementPolicy {readonly twitterCard:string;readonly robots:string;}
+export declare function createPublicationHeadElements(expected:PageExpectation,policy:PublicationHeadElementPolicy):readonly Readonly<HeadElement>[];
