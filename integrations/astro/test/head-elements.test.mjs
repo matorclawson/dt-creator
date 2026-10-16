@@ -42,3 +42,14 @@ test('descriptor inputs reject accessors and extra keys without invoking getters
  }
  assert.throws(()=>createPublicationHeadElements({...source(),extra:true},{twitterCard:'summary',robots:'index'}),TypeError);
 });
+
+for(const field of ['canonical','image'])for(const value of [' https://example.org/a','https://example.org/a b','https://example.org/a\tb','https://example.org/a\nb','https://example.org/a\\b','https://example.org/a"b','https://example.org/a<b','https://example.org/a%ZZ','https://example.org/ab'])test('raw URL refuses '+field+' '+JSON.stringify(value),()=>{
+ assert.throws(()=>createPublicationHeadElements({...source(),[field]:value},{twitterCard:'summary_large_image',robots:'index'}),TypeError);
+});
+test('already serialized encoded URLs and query values remain exact',()=>{
+ const expected={...source(),canonical:'https://example.org/%E6%BC%A2%E5%AD%97/',image:'https://cdn.example.org/image.webp?size=1200&format=webp'};
+ const elements=createPublicationHeadElements(expected,{twitterCard:'summary_large_image',robots:'index'});
+ assert.deepEqual(auditPageHead(elements,expected,auditPolicy(expected)),[]);
+ assert.equal(elements.find(e=>e.tag==='link').attrs.href,expected.canonical);
+ assert.equal(elements.find(e=>e.attrs.property==='og:image').attrs.content,expected.image);
+});

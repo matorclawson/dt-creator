@@ -21,7 +21,10 @@ export function createPublicationHeadElements(expectedInput,policyInput) {
     const policy=snapshot(policyInput,['twitterCard','robots']);
     if(!['canonical','title','description','image'].every(key=>text(expected[key])) || typeof expected.indexable!=='boolean' || !text(policy.twitterCard) || !text(policy.robots)) invalid();
     for(const field of ['canonical','image']) {
-      const url=new URL(expected[field]);
+      const value=expected[field];
+      if(/[\u0000-\u0020\u007f\\"'<>]/u.test(value) || /%(?![a-fA-F0-9]{2})/.test(value)) invalid();
+      const url=new URL(value);
+      if(url.href!==value) invalid();
       if(url.protocol!=='https:' || url.username || url.password || (field==='canonical' && /[?#]/.test(expected[field]))) invalid();
     }
     const robots=robotsState([policy.robots]);
