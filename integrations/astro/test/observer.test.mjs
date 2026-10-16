@@ -74,3 +74,28 @@ test('real hook accepts configured 640px profile and refuses title/hash faults t
   assert.equal(reports[0].ok,fault==='none');assert.ok(!JSON.stringify(reports).includes(reference));
  }
 });
+
+test('artifact accessors refuse without executing changing values',async()=>{
+ const s=setup();let reads=0;
+ Object.defineProperty(s.artifact,'bytes',{enumerable:true,get(){return ++reads===1?100:'changed';}});
+ await assert.rejects(createStaticPublicationObserver(s.options)(s.context),typed('invalid-observer-output'));
+ assert.equal(reads,0);
+});
+test('descriptor snapshot cannot be replaced through a value get trap',async()=>{
+ const s=setup();let reads=0;const source=s.artifact;
+ s.options.readArtifact=()=>new Proxy(source,{get(target,key){if(key==='bytes'){reads++;return 'changed';}return Reflect.get(target,key);}});
+ const out=await createStaticPublicationObserver(s.options)(s.context);
+ assert.equal(out.artifactGroups[0].observed[0].bytes,100);assert.equal(reads,0);
+});
+test('unexpected artifact-group keys refuse before any port',()=>{
+ const s=setup();s.options.artifactGroups[0].extra='ignored';
+ assert.throws(()=>createStaticPublicationObserver(s.options),typed('invalid-observer-config'));assert.deepEqual(s.calls,[]);
+});
+test('head and coverage accessors refuse without exposing getter content',async()=>{
+ for(const target of ['head','coverage']){
+  const s=setup();let reads=0;const value={};
+  Object.defineProperty(value,target==='head'?'elements':'complete',{enumerable:true,get(){reads++;throw Error(reference);}});
+  if(target==='head')s.options.readHead=()=>value;else s.options.attestCoverage=()=>value;
+  await assert.rejects(createStaticPublicationObserver(s.options)(s.context),typed(target==='head'?'invalid-observer-output':'observer-coverage'));assert.equal(reads,0);
+ }
+});

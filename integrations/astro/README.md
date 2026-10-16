@@ -44,3 +44,5 @@ When supplied, observed bytes, width and height must be positive safe integers: 
 | invalid-observer-output | Head/artifact port returned malformed or extra identity fields. |
 
 These codes share PublicationBuildError. The hook wraps observer errors as observation-failed; standalone observer consumers may distinguish its specific codes. Hand-authored declarations remain export-name checked only. Observer work is a separate stacked candidate and second PR after the first hook PR merges, following prerequisite #34/#33 and actual-main full gates. It is not covered by the earlier real-Astro fixture evidence.
+
+Observer record inputs and port results must use own data properties. Accessors are rejected without executing them; validation and copying use the same captured property-descriptor values. Artifact-group configuration accepts only id/policy/expected. This prevents ordinary getter changes between validation and copying; caller ports remain trusted code, and this is not a sandbox against arbitrary proxies or effects.
