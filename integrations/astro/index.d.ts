@@ -52,3 +52,10 @@ export declare function createStaticPublicationObserver(options:StaticObserverOp
 
 export interface PublicationHeadElementPolicy {readonly twitterCard:string;readonly robots:string;}
 export declare function createPublicationHeadElements(expected:PageExpectation,policy:PublicationHeadElementPolicy):readonly Readonly<HeadElement>[];
+
+export interface PublicationSitemapEntry {readonly url:string;readonly lastModified?:string;}
+export interface PublicationSitemapPolicy {
+  readonly pageOrigin:string;
+  readonly selectLastModified:(source:Readonly<{entry:Readonly<PublicEntry>;page:Readonly<{id:string;path:string;expected:Readonly<PageExpectation>}>}>,evaluatedAt:number)=>string|null;
+}
+export declare function createPublicationSitemapEntries(manifest:PublicationManifest,policy:PublicationSitemapPolicy):readonly Readonly<PublicationSitemapEntry>[];

@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Prepare pure source-bound sitemap URL/date rows with exact identity joins, source noindex exclusion and mandatory caller date policy. No XML rendering, clock, dependency, version or release change.
+
 - Add pure frozen publication head descriptors from explicit source metadata/card/robots policy, sharing audit field shapes. Caller templates retain rendering and escaping. No dependency, version or release change.
 
 - Snapshot observer array index data properties before iteration; reject sparse/accessor arrays without invoking element getters.

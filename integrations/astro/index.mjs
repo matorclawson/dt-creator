@@ -25,3 +25,5 @@ export {createAstroPublicationIntegration,PublicationBuildError} from './hook.mj
 export {createStaticPublicationObserver} from './observer.mjs';
 
 export {createPublicationHeadElements} from './quality/head-elements.mjs';
+
+export {createPublicationSitemapEntries} from './quality/sitemap.mjs';
