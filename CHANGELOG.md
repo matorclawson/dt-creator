@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add a separately stacked, caller-port static observation coordinator with immutable source plans, explicit count limits, exact coverage and content-free refusals. No native effects, dependency, version or release change.
+
 - Refuse empty manifests in the private Astro quality hook before its ports run, and document report content limits.
 
 - Add caller-observed Astro build quality hook to the private integration package; incomplete/invalid routes and artifact/head findings fail with typed errors. No Astro dependency, native hook effect, version bump or release.

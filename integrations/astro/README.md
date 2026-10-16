@@ -19,3 +19,26 @@ Build-hook options are explicit: manifest from createPublicationManifest, observ
 The hook requires at least one source page: an empty public manifest refuses with invalid-config before either port runs. An intentionally empty site must omit this hook rather than produce an apparent passing publication check. Quality-refused reports carry finding codes plus source page paths, group indices and known head fields only; observed metadata, unknown paths and original port error content never enter the report.
 
 PublicationBuildError fails the build with a stable code and generic message. Observation/report exceptions are wrapped without cause/message content; reports include counts and source public paths/known finding fields, never observed titles/bodies/unknown paths. Reports are frozen and the report port is awaited. No callback/metadata port is optional. Static pages do not establish SSR completeness: the observer must attest complete observations for the source manifest. Installed structural-hook tests do not prove a real Astro build; site-owned real-build evidence and final merge qualification remain separate.
+
+
+The optional createStaticPublicationObserver({manifest,headPlan,artifactGroups,limits,attestCoverage,readHead,readArtifact}) returns an observer for the existing hook. All ports and positive integer maxPages/maxArtifacts limits are mandatory. The manifest and head plan must cover exactly the same nonempty public paths. Plans use opaque nonempty primitive string references; they are copied into a deep-frozen snapshot at construction. Artifact groups contain {id,policy,expected:[{url,sha256,reference}]}, with unique IDs/URLs and caller-owned policies. Count limits refuse before any port runs. Ports execute sequentially in head-plan then group/asset order, once per call, without retries or caching. Each receives the unchanged hook context.
+
+attestCoverage(context, plannedPaths) must return exactly {complete:true,paths:[...]}, covering each source path exactly once and attesting the site adapter's complete output coverage. Static context.pages alone cannot attest SSR/hybrid coverage. readHead(context, reference) returns exactly {elements:[...]}; readArtifact(context, reference) returns only observed SHA256/byte/decode/pixel-hash/format/dimension fields, without url/path/reference. Plain records and dense arrays are required. Extra identity fields refuse even when equal to source values. The coordinator assigns output path/url from the independent source plan. Returned observations are frozen and contain no opaque references. Existing hook performs quality auditing and owns the report port.
+
+Site ports retain file containment/symlink policy, pre-read byte and decoder allocation limits, HTML parsing and complete image decoding, trusted expected hashes, consistent pixel representation, and site-specific retained-default exceptions. Count limits bound scheduled calls; they do not limit allocations inside ports. This coordinator introduces no native effect or dependency. Port rejection wraps without original message/cause. No new runtime error details contain observed content or references.
+
+| Error code | Meaning |
+| --- | --- |
+| invalid-config | Invalid hook options, including empty source pages. |
+| incomplete-observations | Hook received no positive complete attestation or an incomplete marker. |
+| invalid-observations | Hook received malformed or ambiguous observations. |
+| observation-failed | Hook's observer threw or rejected. |
+| report-failed | Hook's report port threw or rejected. |
+| quality-refused | Completed quality audits found failures; bounded report attached. |
+| invalid-observer-config | Observer ports, source plan, references or policy are malformed. |
+| observer-limit | Configured page/artifact call budget exceeded before ports run. |
+| observer-port-failed | Observer port threw or rejected; original content discarded. |
+| observer-coverage | Coverage attestation incomplete, malformed or not exact. |
+| invalid-observer-output | Head/artifact port returned malformed or extra identity fields. |
+
+These codes share PublicationBuildError. The hook wraps observer errors as observation-failed; standalone observer consumers may distinguish its specific codes. Hand-authored declarations remain export-name checked only. Observer work is a separate stacked candidate and second PR after the first hook PR merges, following prerequisite #34/#33 and actual-main full gates. It is not covered by the earlier real-Astro fixture evidence.

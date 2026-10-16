@@ -27,7 +27,7 @@ export interface PublicationQualityReport {
   readonly counts:Readonly<{expectedPages:number;observedHeads:number;artifactGroups:number;qualifiedArtifacts:number;checkedHeads:number}>;
   readonly findings:readonly Readonly<{code:string;path?:string;group?:number;field?:string}>[];
 }
-export type PublicationBuildErrorCode='invalid-config'|'invalid-observations'|'incomplete-observations'|'observation-failed'|'report-failed'|'quality-refused';
+export type PublicationBuildErrorCode='invalid-config'|'invalid-observations'|'incomplete-observations'|'observation-failed'|'report-failed'|'quality-refused'|'invalid-observer-config'|'observer-limit'|'observer-port-failed'|'observer-coverage'|'invalid-observer-output';
 export declare class PublicationBuildError extends Error {readonly code:PublicationBuildErrorCode;readonly report?:PublicationQualityReport;constructor(code:PublicationBuildErrorCode,report?:PublicationQualityReport);}
 export interface AstroPublicationOptions {
   readonly manifest:PublicationManifest;readonly observeBuild:(context:AstroPublicationBuildContext)=>BuildObservations|Promise<BuildObservations>;
@@ -35,3 +35,17 @@ export interface AstroPublicationOptions {
 }
 export interface AstroPublicationIntegration {readonly name:string;readonly hooks:Readonly<{'astro:build:done':(context:AstroPublicationBuildContext)=>Promise<void>}>;}
 export declare function createAstroPublicationIntegration(options:AstroPublicationOptions):AstroPublicationIntegration;
+
+export interface StaticHeadPlan {readonly path:string;readonly reference:string;}
+export interface StaticArtifactPlan extends ExpectedArtifact {readonly reference:string;}
+export interface StaticArtifactGroup {readonly id:string;readonly policy:ArtifactPolicy;readonly expected:readonly StaticArtifactPlan[];}
+export interface StaticObserverOptions {
+  readonly manifest:PublicationManifest;
+  readonly headPlan:readonly StaticHeadPlan[];
+  readonly artifactGroups:readonly StaticArtifactGroup[];
+  readonly limits:Readonly<{maxPages:number;maxArtifacts:number}>;
+  readonly attestCoverage:(context:AstroPublicationBuildContext,paths:readonly string[])=>Readonly<{complete:true;paths:readonly string[]}>|Promise<Readonly<{complete:true;paths:readonly string[]}>>;
+  readonly readHead:(context:AstroPublicationBuildContext,reference:string)=>Readonly<{elements:readonly HeadElement[]}>|Promise<Readonly<{elements:readonly HeadElement[]}>>;
+  readonly readArtifact:(context:AstroPublicationBuildContext,reference:string)=>Omit<ObservedArtifact,'url'>|Promise<Omit<ObservedArtifact,'url'>>;
+}
+export declare function createStaticPublicationObserver(options:StaticObserverOptions):(context:AstroPublicationBuildContext)=>Promise<BuildObservations>;
