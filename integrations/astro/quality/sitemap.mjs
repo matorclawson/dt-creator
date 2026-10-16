@@ -69,9 +69,9 @@ export function createPublicationSitemapEntries(manifestInput,policyInput) {
     const rows=[];
     for(const item of joined) {
       if(!item.page.expected.indexable) continue;
-      const date=policy.selectLastModified(item,inventory.evaluatedAt);
+      const date=policy.selectLastModified(item.entry,inventory.evaluatedAt);
       if(date!==null && (typeof date!=='string' || Date.parse(utcInstant(date))>inventory.evaluatedAt)) invalid();
-      rows.push(Object.freeze({url:item.entry.canonicalUrl,...(date===null?{}:{lastModified:date})}));
+      rows.push(Object.freeze({url:new URL(item.page.path,origin).href,lastModified:date}));
     }
     return Object.freeze(rows);
   } catch {invalid();}

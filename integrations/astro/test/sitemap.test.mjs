@@ -11,19 +11,19 @@ const policy=()=>({pageOrigin:'https://example.org',selectLastModified:()=>null}
 const clone=()=>structuredClone(manifest());
 test('real core projection excludes private/draft/unavailable/omitted, sitemap excludes noindex',()=>{
  const input=manifest(),calls=[];const rows=createPublicationSitemapEntries(input,{pageOrigin:'https://example.org',selectLastModified:(source,clock)=>{
-  assert.equal(clock,now);assert.ok(Object.isFrozen(source) && Object.isFrozen(source.entry) && Object.isFrozen(source.page.expected));calls.push(source.entry.id);
-  return source.entry.id==='alpha'?source.entry.updatedAt:null;
+  assert.equal(clock,now);assert.ok(Object.isFrozen(source));calls.push(source.id);
+  return source.id==='alpha'?source.updatedAt:null;
  }});
- assert.deepEqual(calls,['alpha','zeta']);assert.deepEqual(rows,[{url:'https://example.org/alpha/',lastModified:'2026-01-03T00:00:00Z'},{url:'https://example.org/zeta/'}]);
+ assert.deepEqual(calls,['alpha','zeta']);assert.deepEqual(rows,[{url:'https://example.org/alpha/',lastModified:'2026-01-03T00:00:00Z'},{url:'https://example.org/zeta/',lastModified:null}]);
  assert.ok(Object.isFrozen(rows) && rows.every(Object.isFrozen));assert.ok(!JSON.stringify(rows).includes('Summary'));
 });
 test('timestamps never default even when source has publication and update instants',()=>{
- assert.ok(createPublicationSitemapEntries(manifest(),policy()).every(row=>!Object.hasOwn(row,'lastModified')));
+ assert.ok(createPublicationSitemapEntries(manifest(),policy()).every(row=>row.lastModified===null));
 });
 test('ordering and result do not depend on source array order or mutations by callback',()=>{
  const input=clone();input.pages.reverse();input.inventory.entries.reverse();const seen=[];
  const rows=createPublicationSitemapEntries(input,{pageOrigin:'https://example.org',selectLastModified:source=>{
-  seen.push(source.entry.id);input.pages.length=0;input.inventory.entries.length=0;return null;
+  seen.push(source.id);input.pages.length=0;input.inventory.entries.length=0;return null;
  }});
  assert.deepEqual(seen,['alpha','zeta']);assert.deepEqual(rows.map(r=>r.url),['https://example.org/alpha/','https://example.org/zeta/']);
 });
