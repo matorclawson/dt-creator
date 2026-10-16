@@ -99,3 +99,32 @@ test('head and coverage accessors refuse without exposing getter content',async(
   await assert.rejects(createStaticPublicationObserver(s.options)(s.context),typed(target==='head'?'invalid-observer-output':'observer-coverage'));assert.equal(reads,0);
  }
 });
+
+test('array accessors in source plans and policies refuse without invocation',()=>{
+ for(const target of ['pages','headPlan','groups','expected','origins','formats']){
+  const s=setup();let reads=0;const array=[];
+  Object.defineProperty(array,'0',{enumerable:true,get(){reads++;throw Error(reference);}});
+  if(target==='pages')s.options.manifest.pages=array;
+  if(target==='headPlan')s.options.headPlan=array;
+  if(target==='groups')s.options.artifactGroups=array;
+  if(target==='expected')s.options.artifactGroups[0].expected=array;
+  if(target==='origins')s.options.artifactGroups[0].policy.origins=array;
+  if(target==='formats')s.options.artifactGroups[0].policy.formats=array;
+  assert.throws(()=>createStaticPublicationObserver(s.options),typed('invalid-observer-config'));assert.equal(reads,0);assert.deepEqual(s.calls,[]);
+ }
+});
+test('array accessors in coverage and head output refuse without invocation',async()=>{
+ for(const target of ['coverage','elements']){
+  const s=setup();let reads=0;const array=[];
+  Object.defineProperty(array,'0',{enumerable:true,get(){reads++;throw Error(reference);}});
+  if(target==='coverage')s.options.attestCoverage=()=>({complete:true,paths:array});else s.options.readHead=()=>({elements:array});
+  await assert.rejects(createStaticPublicationObserver(s.options)(s.context),typed(target==='coverage'?'observer-coverage':'invalid-observer-output'));assert.equal(reads,0);
+ }
+});
+test('array descriptor snapshots ignore live index and length get traps',async()=>{
+ const s=setup();let reads=0;
+ const wrap=array=>new Proxy(array,{get(target,key){if(key==='0' || key==='length'){reads++;throw Error(reference);}return Reflect.get(target,key);}});
+ s.options.headPlan=wrap(s.options.headPlan);s.options.artifactGroups[0].policy.formats=wrap(['webp']);
+ s.options.attestCoverage=()=>({complete:true,paths:wrap(['/guide/'])});s.options.readHead=()=>({elements:wrap(s.elements)});
+ const output=await createStaticPublicationObserver(s.options)(s.context);assert.equal(output.heads[0].path,'/guide/');assert.equal(output.artifactGroups[0].policy.formats[0],'webp');assert.equal(reads,0);
+});

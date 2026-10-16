@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Snapshot observer array index data properties before iteration; reject sparse/accessor arrays without invoking element getters.
+
 - Snapshot observer record data properties before validation/copying, reject accessors without invoking them, and refuse extra artifact-group keys.
 
 - Add a separately stacked, caller-port static observation coordinator with immutable source plans, explicit count limits, exact coverage and content-free refusals. No native effects, dependency, version or release change.
