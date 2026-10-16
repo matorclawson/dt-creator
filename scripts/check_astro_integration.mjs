@@ -57,6 +57,8 @@ try {
  cpSync(path.join(consumer,'node_modules/@zeroemployeeorg/astro-integration'),path.join(missing,'node_modules/@zeroemployeeorg/astro-integration'),{recursive:true});
  const absent=spawnSync(process.execPath,['--input-type=module','--eval',"await import('@zeroemployeeorg/astro-integration')"],{cwd:missing,env,encoding:'utf8'});
  assert.notEqual(absent.status,0);assert.match(absent.stderr,/ERR_MODULE_NOT_FOUND/);
+ const missingCoreEvidence={control:'missing-core-import',exit:absent.status,errorCode:'ERR_MODULE_NOT_FOUND',refused:true};
+ console.log(JSON.stringify({schema:'zeocreator.astro-refusal/v1',...missingCoreEvidence}));
  const bad=path.join(scratch,'incompatible-core');mkdirSync(bad);writeFileSync(path.join(bad,'package.json'),JSON.stringify({name:'@zeroemployeeorg/publication-core',version:'0.0.0',type:'module',exports:'./index.mjs'}));
  writeFileSync(path.join(bad,'index.mjs'),'throw new Error("incompatible fixture must not execute");\n');
  const [badMeta]=JSON.parse(npm(['pack','--json','--ignore-scripts','--pack-destination',packs],bad));
@@ -64,7 +66,9 @@ try {
  const refused=spawnSync(npmExecutable,['install','--offline','--ignore-scripts','--no-audit','--no-fund',path.join(packs,badMeta.filename),path.join(packs,packed[1].filename)],{cwd:incompatible,env,encoding:'utf8'});
  assert.notEqual(refused.status,0,'incompatible core must refuse offline installation');
  assert.match(refused.stderr,/ENOTCACHED|ERESOLVE|ETARGET/,'refusal must come from dependency resolution');
- const report={schema:'zeocreator.astro-candidate/v1',ok:true,scope:'local private candidate; not release/adoption',npm:{executable:npmExecutable,version:npmVersion,major:npmMajor},head:execFileSync('git',['rev-parse','HEAD'],{cwd:repo,encoding:'utf8'}).trim(),packed,witness,negativeControls:['missing core named import refused','incompatible core offline install refused'],declarationCheck:'export names only; no compiler/type soundness claim'};
+ const incompatibleCoreEvidence={control:'incompatible-core-install',exit:refused.status,errorCode:refused.stderr.match(/ENOTCACHED|ERESOLVE|ETARGET/)[0],refused:true};
+ console.log(JSON.stringify({schema:'zeocreator.astro-refusal/v1',...incompatibleCoreEvidence}));
+ const report={schema:'zeocreator.astro-candidate/v1',ok:true,scope:'local private candidate; not release/adoption',npm:{executable:npmExecutable,version:npmVersion,major:npmMajor},head:execFileSync('git',['rev-parse','HEAD'],{cwd:repo,encoding:'utf8'}).trim(),packed,witness,negativeEvidence:[missingCoreEvidence,incompatibleCoreEvidence],negativeControls:['missing core named import refused','incompatible core offline install refused'],declarationCheck:'export names only; no compiler/type soundness claim'};
  if(process.env.ZEO_ASTRO_GATE_OUTPUT)writeFileSync(process.env.ZEO_ASTRO_GATE_OUTPUT,JSON.stringify(report,null,2)+'\n');
  console.log(JSON.stringify(report));
 } finally {rmSync(scratch,{recursive:true,force:true});}
