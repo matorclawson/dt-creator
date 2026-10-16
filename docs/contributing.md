@@ -60,7 +60,7 @@ approval.
 `integrations/astro/` is a private Node24 ESM package beside the pure publication core. Its named
 core import projects caller-owned documents into canonical source/head expectations; caller-policy
 OG and normalized-head audits check observations. No clock, layout, brand, asset-size default or
-automatic Astro hook is supplied. Core and Python distributions remain independent.
+implicit build policy is supplied. The optional structural astro:build:done hook invokes explicit caller observation/report ports, admits only audited artifact URLs and wraps refusal/port errors without observed content. It never reads output files or infers SSR completeness. Core and Python distributions remain independent.
 
 Run `make verify-astro-integration` with the admitted Node24 and npm executable. Its local candidate
 gate packs both JS packages, installs the explicit tarballs offline with scripts disabled, checks

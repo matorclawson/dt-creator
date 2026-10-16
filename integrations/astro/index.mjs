@@ -19,3 +19,5 @@ export function createPublicationManifest({site, documents, projection, describe
   });
   return Object.freeze({inventory,pages:Object.freeze(pages)});
 }
+
+export {createAstroPublicationIntegration,PublicationBuildError} from './hook.mjs';

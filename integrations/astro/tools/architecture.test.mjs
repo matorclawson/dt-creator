@@ -15,8 +15,8 @@ test('runtime source contains no effects, house vocabulary or reverse core depen
  const coreManifest=JSON.parse(readFileSync(new URL('../../packages/publication-core/package.json',root)));
  assert.deepEqual(Object.keys(manifest.dependencies),['@zeroemployeeorg/publication-core']);assertCorePin(manifest,coreManifest);assert.equal(manifest.devDependencies,undefined);
  assert.equal(manifest.type,'module');assert.deepEqual(manifest.exports,{'.':{types:'./index.d.ts',import:'./index.mjs'}});
- assert.deepEqual(manifest.files,['index.mjs','index.d.ts','quality','README.md','CHANGELOG.md','.node-version']);
- const files=['index.mjs',...readdirSync(new URL('quality/',root)).map(name=>'quality/'+name)];
+ assert.deepEqual(manifest.files,['index.mjs','hook.mjs','index.d.ts','quality','README.md','CHANGELOG.md','.node-version']);
+ const files=['index.mjs','hook.mjs',...readdirSync(new URL('quality/',root)).map(name=>'quality/'+name)];
  for(const name of files)assert.ok(!forbidden.test(readFileSync(new URL(name,root),'utf8')),name);
  assert.deepEqual(reverseCoreImports(fileURLToPath(new URL('../../packages/publication-core/',root))),[]);
  assert.match(readFileSync(new URL('index.mjs',root),'utf8'),/from '@zeroemployeeorg\/publication-core'/);
@@ -44,4 +44,10 @@ test('stale integration dependency fails when core version changes',()=>{
  assert.doesNotThrow(()=>assertCorePin(integration,{version:'0.1.0-alpha.4'}));
  assert.throws(()=>assertCorePin(integration,{version:'0.1.0-alpha.5'}),/must equal/);
  assert.throws(()=>assertCorePin({}, {version:'0.1.0-alpha.4'}),/must equal/);
+});
+
+test('package runtime does not import Astro',()=>{
+ for(const name of ['index.mjs','hook.mjs',...readdirSync(new URL('quality/',root)).map(name=>'quality/'+name)]) {
+   assert.ok(!/(?:from\s*|import\s*\(?\s*|require\s*\(\s*)['"]astro(?:['"/])/.test(readFileSync(new URL(name,root),'utf8')),name);
+ }
 });

@@ -98,8 +98,8 @@ The requester still writes the proposal and the tests; the maintainer decides wh
   of the Python wheel or sdist, and is never published from here.
 - **Astro integration (JavaScript).** `integrations/astro/` is a separate private Node24 ESM package
   importing publication-core by its named public API. Core never imports it. Caller policies and
-  normalized build observations stay explicit; site profiles stay outside this package. No automatic
-  build hook, parser, decoder or third-party npm dependency is introduced by this first slice.
+  normalized build observations stay explicit; site profiles stay outside this package. The structural build hook uses caller observation/report ports; no native filesystem hook,
+  parser, decoder or third-party npm dependency is introduced.
   `make verify-astro-integration` packs both private candidates, installs them offline in an isolated
   consumer and runs named-import behavior/boundary checks. This is not an owner-issued release or
   site adoption. Future owner tags use `astro-integration-v*`, never Python or core namespaces.

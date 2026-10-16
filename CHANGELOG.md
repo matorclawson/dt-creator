@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Add caller-observed Astro build quality hook to the private integration package; incomplete/invalid routes and artifact/head findings fail with typed errors. No Astro dependency, native hook effect, version bump or release.
+
 - Prepare a separate private Node24 `integrations/astro` package importing publication-core one-way, caller-policy OG/head audits and source head manifests; add offline candidate pack/install and Python archive exclusion checks. No automatic Astro hook, site policy, release or adoption.
 
 - Import the five-commit publication-core history without squash, then separately neutralize the private zero-dependency ESM package at `packages/publication-core/`. Its Node 24 contract/export and failure-path tests run in `make verify`; actual Python wheel and sdist checks refuse inclusion of `packages/`. No Python contract/version, provider, npm dependency, release or consumer adoption changes.
