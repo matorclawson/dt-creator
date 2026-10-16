@@ -128,3 +128,16 @@ test('array descriptor snapshots ignore live index and length get traps',async()
  s.options.attestCoverage=()=>({complete:true,paths:wrap(['/guide/'])});s.options.readHead=()=>({elements:wrap(s.elements)});
  const output=await createStaticPublicationObserver(s.options)(s.context);assert.equal(output.heads[0].path,'/guide/');assert.equal(output.artifactGroups[0].policy.formats[0],'webp');assert.equal(reads,0);
 });
+
+for(const level of ['options','manifest','inventory'])test('closed observer surface rejects extra '+level+' keys before ports',()=>{
+ const s=setup();const input=level==='options'?s.options:level==='manifest'?s.options.manifest:s.options.manifest.inventory;input.ignoredTypo=true;
+ assert.throws(()=>createStaticPublicationObserver(s.options),typed('invalid-observer-config'));assert.deepEqual(s.calls,[]);
+});
+test('outer observer snapshots reject accessors without invoking root or nested getters',()=>{
+ for(const level of ['options','port','manifest','inventory']){
+  const s=setup();let reads=0;const input=level==='options' || level==='port'?s.options:level==='manifest'?s.options.manifest:s.options.manifest.inventory;
+  const field=level==='options'?'manifest':level==='port'?'readHead':level==='manifest'?'pages':'entries';
+  Object.defineProperty(input,field,{enumerable:true,get(){reads++;throw Error(reference);}});
+  assert.throws(()=>createStaticPublicationObserver(s.options),typed('invalid-observer-config'));assert.equal(reads,0);assert.deepEqual(s.calls,[]);
+ }
+});

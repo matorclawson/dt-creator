@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Reject unknown/accessor keys on outer observer options, manifest and inventory before ports run, completing data-only configuration snapshots.
+
 - Snapshot observer array index data properties before iteration; reject sparse/accessor arrays without invoking element getters.
 
 - Snapshot observer record data properties before validation/copying, reject accessors without invoking them, and refuse extra artifact-group keys.
