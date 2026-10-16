@@ -10,9 +10,15 @@ const repo=fileURLToPath(new URL('../',import.meta.url));
 assert.equal(process.versions.node.split('.')[0],'24','admitted Node24 required');
 const scratch=mkdtempSync(path.join(tmpdir(),'zeocreator-astro-'));
 const env={...process.env,npm_config_cache:path.join(scratch,'npm-cache'),npm_config_offline:'true',npm_config_audit:'false',npm_config_fund:'false',npm_config_ignore_scripts:'true'};
-const npm=(args,cwd)=>execFileSync('npm',args,{cwd,env,encoding:'utf8',maxBuffer:8*1024*1024});
+const npmExecutable=process.env.NPM || 'npm';
+const npm=(args,cwd)=>execFileSync(npmExecutable,args,{cwd,env,encoding:'utf8',maxBuffer:8*1024*1024});
 const run=(args,cwd)=>execFileSync(process.execPath,args,{cwd,env,encoding:'utf8',maxBuffer:8*1024*1024});
 try {
+ let npmVersion;
+ try {npmVersion=npm(['--version'],repo).trim();}
+ catch {throw new Error('Astro candidate gate requires an available NPM executable; set NPM to an installed npm executable');}
+ assert.match(npmVersion,/^\d+\.\d+\.\d+(?:[-+].+)?$/,'NPM must report a semantic version');
+ const npmMajor=Number(npmVersion.split('.')[0]);assert.ok(Number.isSafeInteger(npmMajor) && npmMajor>0,'NPM major must be recorded');
  const packs=path.join(scratch,'packs');mkdirSync(packs);
  const packed=[];
  for(const directory of ['packages/publication-core','integrations/astro']){
@@ -55,10 +61,10 @@ try {
  writeFileSync(path.join(bad,'index.mjs'),'throw new Error("incompatible fixture must not execute");\n');
  const [badMeta]=JSON.parse(npm(['pack','--json','--ignore-scripts','--pack-destination',packs],bad));
  const incompatible=path.join(scratch,'incompatible-consumer');mkdirSync(incompatible);writeFileSync(path.join(incompatible,'package.json'),JSON.stringify({private:true,type:'module'}));
- const refused=spawnSync('npm',['install','--offline','--ignore-scripts','--no-audit','--no-fund',path.join(packs,badMeta.filename),path.join(packs,packed[1].filename)],{cwd:incompatible,env,encoding:'utf8'});
+ const refused=spawnSync(npmExecutable,['install','--offline','--ignore-scripts','--no-audit','--no-fund',path.join(packs,badMeta.filename),path.join(packs,packed[1].filename)],{cwd:incompatible,env,encoding:'utf8'});
  assert.notEqual(refused.status,0,'incompatible core must refuse offline installation');
  assert.match(refused.stderr,/ENOTCACHED|ERESOLVE|ETARGET/,'refusal must come from dependency resolution');
- const report={schema:'zeocreator.astro-candidate/v1',ok:true,scope:'local private candidate; not release/adoption',head:execFileSync('git',['rev-parse','HEAD'],{cwd:repo,encoding:'utf8'}).trim(),packed,witness,negativeControls:['missing core named import refused','incompatible core offline install refused'],declarationCheck:'export names only; no compiler/type soundness claim'};
+ const report={schema:'zeocreator.astro-candidate/v1',ok:true,scope:'local private candidate; not release/adoption',npm:{executable:npmExecutable,version:npmVersion,major:npmMajor},head:execFileSync('git',['rev-parse','HEAD'],{cwd:repo,encoding:'utf8'}).trim(),packed,witness,negativeControls:['missing core named import refused','incompatible core offline install refused'],declarationCheck:'export names only; no compiler/type soundness claim'};
  if(process.env.ZEO_ASTRO_GATE_OUTPUT)writeFileSync(process.env.ZEO_ASTRO_GATE_OUTPUT,JSON.stringify(report,null,2)+'\n');
  console.log(JSON.stringify(report));
 } finally {rmSync(scratch,{recursive:true,force:true});}

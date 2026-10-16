@@ -4,6 +4,7 @@
 
 UV ?= uv
 NODE ?= node
+NPM ?= npm
 ZEO_CREATOR := $(UV) run zeo-creator
 ARGS ?=
 VERSION ?=
@@ -112,7 +113,7 @@ verify-publication-core:
 	$(NODE) --test packages/publication-core/test/*.test.mjs
 
 verify-astro-integration:
-	$(NODE) scripts/check_astro_integration.mjs
+	NPM="$(NPM)" $(NODE) scripts/check_astro_integration.mjs
 
 verify:
 	@printf 'head: %s\n' "$$(git rev-parse HEAD)"
