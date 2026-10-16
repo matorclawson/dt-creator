@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Refuse loose raw head URLs that require normalization or contain controls, delimiters or malformed percent escapes, preserving already serialized values exactly.
+
 - Add pure frozen publication head descriptors from explicit source metadata/card/robots policy, sharing audit field shapes. Caller templates retain rendering and escaping. No dependency, version or release change.
 
 - Snapshot observer array index data properties before iteration; reject sparse/accessor arrays without invoking element getters.
