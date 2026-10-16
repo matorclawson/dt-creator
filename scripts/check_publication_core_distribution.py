@@ -10,6 +10,7 @@ def check_members(names: list[str]) -> None:
         parts = PurePosixPath(name).parts
         if (
             "packages" in parts
+            or "integrations" in parts
             or "publication-core" in parts
             or PurePosixPath(name).name in {".node-version", "package.json"}
         ):

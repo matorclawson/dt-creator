@@ -1,6 +1,6 @@
 .PHONY: help setup sync test lint typecheck format check verify clean lock update \
 	cli version doctor capabilities reference reference-check docs docs-serve examples \
-	digest-vectors dist-check release-check install verify-publication-core
+	digest-vectors dist-check release-check install verify-publication-core verify-astro-integration
 
 UV ?= uv
 NODE ?= node
@@ -111,9 +111,12 @@ verify-publication-core:
 	$(NODE) packages/publication-core/tools/check-contract.mjs
 	$(NODE) --test packages/publication-core/test/*.test.mjs
 
+verify-astro-integration:
+	$(NODE) scripts/check_astro_integration.mjs
+
 verify:
 	@printf 'head: %s\n' "$$(git rev-parse HEAD)"
-	$(MAKE) release-check verify-publication-core check digest-vectors dist-check
+	$(MAKE) release-check verify-publication-core verify-astro-integration check digest-vectors dist-check
 
 clean:
 	rm -rf .pytest_cache .ruff_cache .mypy_cache .coverage coverage.xml htmlcov dist build site

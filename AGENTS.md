@@ -7,6 +7,7 @@ ZEO Creator is a governed capability package, not a workflow runtime.
 - Never add live provider execution, scheduling, OAuth, or renderer internals.
 - Use `make verify` and `make doctor` before declaring work ready.
 - `packages/publication-core/` is a private pure ESM package with hand-authored declarations and zero npm dependencies. Its Node 24 tests run in `make verify`; it stays outside Python distributions and has no publication authority here.
+- `integrations/astro/` is a separate private Node24 ESM package importing publication-core one-way. Its local offline installed-candidate gate runs in `make verify`; site policies and effects remain outside. Neither JS tree enters Python distributions.
 - Do not publish, push to the golden repository, rename, or change repository visibility without an explicit operator decision. Work on a fork and open a pull request.
 
 Governed work lives in the associated organization corpus and must follow its

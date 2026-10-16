@@ -54,3 +54,20 @@ task-oriented how-to guides and generated API reference.
 Tests and examples must never contact a live provider or require a reusable
 credential. PyPI publication and provider effects require separate operator
 approval.
+
+## Astro integration preparation
+
+`integrations/astro/` is a private Node24 ESM package beside the pure publication core. Its named
+core import projects caller-owned documents into canonical source/head expectations; caller-policy
+OG and normalized-head audits check observations. No clock, layout, brand, asset-size default or
+automatic Astro hook is supplied. Core and Python distributions remain independent.
+
+Run `make verify-astro-integration` with the admitted Node24 and npm executable. Its local candidate
+gate packs both JS packages, installs the explicit tarballs offline with scripts disabled, checks
+physical named-import resolution and runs behavior/refusal tests. Set TMPDIR to owned scratch on
+ZeoWork on the operator host. This is candidate qualification, not publication or a consumer release.
+Hand-authored declarations receive export-name checks only, not compiler qualification.
+
+The complete `make verify` and `make doctor` still apply to the actual final merge result. The
+implementation PR follows33/34 and one-ready-row sequencing; no JavaScript publishing job is added.
+Future owner-issued integration tags use their own `astro-integration-v*` namespace.

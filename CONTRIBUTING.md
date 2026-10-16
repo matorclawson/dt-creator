@@ -96,6 +96,15 @@ The requester still writes the proposal and the tests; the maintainer decides wh
   and `make verify` refuses a different major. The package has zero npm packages; any package, even
   dev-only, goes to the Architect first with name, version, publisher, downloads and age. It is not part
   of the Python wheel or sdist, and is never published from here.
+- **Astro integration (JavaScript).** `integrations/astro/` is a separate private Node24 ESM package
+  importing publication-core by its named public API. Core never imports it. Caller policies and
+  normalized build observations stay explicit; site profiles stay outside this package. No automatic
+  build hook, parser, decoder or third-party npm dependency is introduced by this first slice.
+  `make verify-astro-integration` packs both private candidates, installs them offline in an isolated
+  consumer and runs named-import behavior/boundary checks. This is not an owner-issued release or
+  site adoption. Future owner tags use `astro-integration-v*`, never Python or core namespaces.
+  Both JS trees must remain absent from Python archives. Any new dependency or gate surface remains
+  owner-reviewed and follows the dependency approval rule above.
 - **CLI conventions** (Zeocore's `cli_protocol` 1). Every command prints exactly one JSON line on
   stdout, carrying `ok` and `"schema": "zeocreator.<thing>/v1"`. Exit codes are 0 done, 1 internal
   (no detail), 2 invalid input, 20 held or refused. Nothing prompts, and an error never echoes input on

@@ -34,6 +34,8 @@ def test_python_only_distributions_pass(tmp_path: Path) -> None:
     "path",
     [
         "packages/publication-core/index.mjs",
+        "integrations/astro/index.mjs",
+        "zeocreator-test/integrations/astro/quality/head.mjs",
         "zeocreator-test/packages/publication-core/index.mjs",
         "zeocreator-test/publication-core/package.json",
         "zeocreator-test/packages/other-package/",
