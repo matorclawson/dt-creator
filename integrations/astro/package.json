@@ -1,0 +1,28 @@
+{
+  "name": "@zeroemployeeorg/astro-integration",
+  "version": "0.1.0-alpha.0",
+  "private": true,
+  "type": "module",
+  "types": "./index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.mjs"
+    }
+  },
+  "files": [
+    "index.mjs",
+    "index.d.ts",
+    "quality",
+    "README.md",
+    "CHANGELOG.md",
+    ".node-version"
+  ],
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "dependencies": {
+    "@zeroemployeeorg/publication-core": "0.1.0-alpha.4"
+  },
+  "description": "Private unreleased Astro-facing publication manifest and caller-policy quality preparation"
+}
