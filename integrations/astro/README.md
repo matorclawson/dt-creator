@@ -27,6 +27,8 @@ attestCoverage(context, plannedPaths) must return exactly {complete:true,paths:[
 
 Site ports retain file containment/symlink policy, pre-read byte and decoder allocation limits, HTML parsing and complete image decoding, trusted expected hashes, consistent pixel representation, and site-specific retained-default exceptions. Count limits bound scheduled calls; they do not limit allocations inside ports. This coordinator introduces no native effect or dependency. Port rejection wraps without original message/cause. No new runtime error details contain observed content or references.
 
+When supplied, observed bytes, width and height must be positive safe integers: zero-byte artifacts and zero dimensions refuse as invalid-observer-output. Coverage is attested before reads; the observer trusts each port to read the file identified by its opaque reference. It does not prove that returned HTML belongs to that route. Keep the quality hook enabled: its independent expected canonical and metadata checks catch route/content mismatches. Site adapters remain responsible for correct reference-to-file binding.
+
 | Error code | Meaning |
 | --- | --- |
 | invalid-config | Invalid hook options, including empty source pages. |
