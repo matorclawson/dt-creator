@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Refuse empty manifests in the private Astro quality hook before its ports run, and document report content limits.
+
 - Add caller-observed Astro build quality hook to the private integration package; incomplete/invalid routes and artifact/head findings fail with typed errors. No Astro dependency, native hook effect, version bump or release.
 
 - Prepare a separate private Node24 `integrations/astro` package importing publication-core one-way, caller-policy OG/head audits and source head manifests; add offline candidate pack/install and Python archive exclusion checks. No automatic Astro hook, site policy, release or adoption.

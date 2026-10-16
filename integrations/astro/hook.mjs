@@ -14,7 +14,7 @@ export function createAstroPublicationIntegration(options) {
     const {manifest}=options;
     ({observeBuild,onReport}=options);
     if(typeof observeBuild!=='function' || typeof onReport!=='function') fail('invalid-config');
-    if(!manifest || !Array.isArray(manifest.pages) || !Number.isFinite(manifest.inventory?.evaluatedAt)) fail('invalid-config');
+    if(!manifest || !Array.isArray(manifest.pages) || manifest.pages.length===0 || !Number.isFinite(manifest.inventory?.evaluatedAt)) fail('invalid-config');
     evaluatedAt=manifest.inventory.evaluatedAt;
     const paths=new Set();
     pages=manifest.pages.map(page=>{

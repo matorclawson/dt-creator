@@ -57,3 +57,10 @@ test('observer sync throws/async rejection and report rejection are wrapped with
 test('missing ports and incomplete source configuration refuse at construction',()=>{
  for(const key of ['observeBuild','onReport','manifest','headPolicy']){const s=setup();delete s.options[key];assert.throws(()=>createAstroPublicationIntegration(s.options),PublicationBuildError);}
 });
+test('an empty public manifest refuses before observation or reporting',()=>{
+ const s=setup();let observed=false;
+ s.options.manifest={...s.options.manifest,pages:[]};
+ s.options.observeBuild=()=>{observed=true;return s.observed;};
+ assert.throws(()=>createAstroPublicationIntegration(s.options),error=>error instanceof PublicationBuildError && error.code==='invalid-config');
+ assert.equal(observed,false);assert.equal(s.reports.length,0);
+});
