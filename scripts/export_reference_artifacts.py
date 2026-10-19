@@ -34,8 +34,8 @@ from zeo_creator.contracts.distribution import (
     ProposedPublicationOperation,
     PublicationReceipt,
 )
-from zeo_creator.contracts.editorial import ContentPortfolioPlan, EditorialAssignment
 from zeo_creator.contracts.document import NormalizedDocument
+from zeo_creator.contracts.editorial import ContentPortfolioPlan, EditorialAssignment
 from zeo_creator.contracts.evidence import EvidenceItem, ResearchSynthesis
 from zeo_creator.contracts.journalism import (
     CorrectionNotice,
