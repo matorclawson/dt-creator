@@ -79,9 +79,9 @@ class NormalizedDocument(DurableArtifact):
         if len(media_ids) != len(set(media_ids)):
             raise ValueError("media identifiers are unique within a document")
         known = set(block_ids)
-        for owner in (*self.links, *self.media):
-            if owner.block_id is not None and owner.block_id not in known:
-                raise ValueError("a link or media item names a block this document lacks")
+        named = [item.block_id for item in (*self.links, *self.media)]
+        if any(name is not None and name not in known for name in named):
+            raise ValueError("a link or media item names a block this document lacks")
         return self
 
     def subject(self) -> DocumentSubject:
