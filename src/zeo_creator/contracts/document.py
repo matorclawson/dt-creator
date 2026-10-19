@@ -79,7 +79,7 @@ class NormalizedDocument(DurableArtifact):
         if len(media_ids) != len(set(media_ids)):
             raise ValueError("media identifiers are unique within a document")
         known = set(block_ids)
-        named = [item.block_id for item in (*self.links, *self.media)]
+        named = [link.block_id for link in self.links] + [item.block_id for item in self.media]
         if any(name is not None and name not in known for name in named):
             raise ValueError("a link or media item names a block this document lacks")
         return self
