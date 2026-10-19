@@ -3,6 +3,7 @@
 ## Unreleased
 
 - Add the generic review rubric: the `ReviewRubric` and `RubricScorecard` contracts and the pure, fail-closed capability `creator.evaluate_rubric@1.0.0` (the 30th capability; the runtime-provider inventory changes). Creator ships the shape and the engine only: no rubric instance, scorer, lexicon, persona or profile.
+- Add the `NormalizedDocument` contract (catalog `content-document` v1): the generic, medium-agnostic document a site adapter hands to a review gate (typed blocks with identifiers, links, media with digests, source revision and digest). `NormalizedDocument.subject()` yields the rubric's `DocumentSubject`; `block_texts()` and `text()` feed `evaluate_rubric` quote checks. A contract only: no capability, so the runtime-provider inventory is unchanged.
 
 ## 0.6.0 — 2026-10-13 (preparation marker; the release date is set when tagged)
 

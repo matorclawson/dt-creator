@@ -35,6 +35,7 @@ from zeo_creator.contracts.distribution import (
     PublicationReceipt,
 )
 from zeo_creator.contracts.editorial import ContentPortfolioPlan, EditorialAssignment
+from zeo_creator.contracts.document import NormalizedDocument
 from zeo_creator.contracts.evidence import EvidenceItem, ResearchSynthesis
 from zeo_creator.contracts.journalism import (
     CorrectionNotice,
@@ -89,6 +90,7 @@ def export_schemas() -> None:
         ("content-brief", "1", ContentBrief),
         ("artifact-manifest", "1", ArtifactManifest),
         ("delivery-review-bundle", "1", DeliveryReviewBundle),
+        ("content-document", "1", NormalizedDocument),
         ("review-rubric", "1", ReviewRubric),
         ("rubric-scorecard", "1", RubricScorecard),
         ("rubric-evaluation", "1", RubricEvaluation),
