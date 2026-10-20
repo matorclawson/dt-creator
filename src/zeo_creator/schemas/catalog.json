@@ -49,6 +49,12 @@
       "version": "1"
     },
     {
+      "filename": "delivery-rubric-binding.v1.schema.json",
+      "name": "delivery-rubric-binding",
+      "schema_digest": "sha256:4f3915469973f0a53383bfa757a9c0505d3b5c36a7093ac7d6d0774089d9e2fb",
+      "version": "1"
+    },
+    {
       "filename": "content-document.v1.schema.json",
       "name": "content-document",
       "schema_digest": "sha256:580325949fad8cb1c989866e14e1ced46f67496b585fe8caad228098a8f9d33a",

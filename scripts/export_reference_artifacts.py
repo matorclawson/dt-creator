@@ -28,6 +28,7 @@ from zeo_creator.contracts.commentary import (
 )
 from zeo_creator.contracts.common import canonical_digest
 from zeo_creator.contracts.delivery import ArtifactManifest, DeliveryReviewBundle
+from zeo_creator.contracts.delivery_rubric import DeliveryRubricBinding
 from zeo_creator.contracts.distribution import (
     ChannelPlan,
     DistributionVariant,
@@ -90,6 +91,7 @@ def export_schemas() -> None:
         ("content-brief", "1", ContentBrief),
         ("artifact-manifest", "1", ArtifactManifest),
         ("delivery-review-bundle", "1", DeliveryReviewBundle),
+        ("delivery-rubric-binding", "1", DeliveryRubricBinding),
         ("content-document", "1", NormalizedDocument),
         ("review-rubric", "1", ReviewRubric),
         ("rubric-scorecard", "1", RubricScorecard),

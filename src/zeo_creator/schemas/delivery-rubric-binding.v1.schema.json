@@ -1,0 +1,166 @@
+{
+  "$defs": {
+    "DeliveryFinding": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "minLength": 1,
+          "title": "Category",
+          "type": "string"
+        },
+        "code": {
+          "pattern": "^ZEO_CREATOR_[A-Z0-9_]+$",
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/FindingSeverity"
+        }
+      },
+      "required": [
+        "code",
+        "severity",
+        "category",
+        "message"
+      ],
+      "title": "DeliveryFinding",
+      "type": "object"
+    },
+    "FindingSeverity": {
+      "enum": [
+        "blocking",
+        "advisory"
+      ],
+      "title": "FindingSeverity",
+      "type": "string"
+    },
+    "RubricEvaluationRef": {
+      "additionalProperties": false,
+      "properties": {
+        "digest": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "title": "Digest",
+          "type": "string"
+        },
+        "evaluation_id": {
+          "minLength": 1,
+          "title": "Evaluation Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evaluation_id",
+        "digest"
+      ],
+      "title": "RubricEvaluationRef",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "Which rubric evaluations were read for one delivery review, and whether they allow approval.\n\nThe review is bound by its id, content digest and approval digest, and stays untouched.\n`approval_digest` covers the review's approval digest and the sorted evaluation references,\nso changing the review or the evaluation set changes it.",
+  "properties": {
+    "approval_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Approval Digest",
+      "type": "string"
+    },
+    "binding_id": {
+      "minLength": 1,
+      "title": "Binding Id",
+      "type": "string"
+    },
+    "content_digest": {
+      "default": "",
+      "title": "Content Digest",
+      "type": "string"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    },
+    "evaluation_refs": {
+      "items": {
+        "$ref": "#/$defs/RubricEvaluationRef"
+      },
+      "minItems": 1,
+      "title": "Evaluation Refs",
+      "type": "array"
+    },
+    "findings": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/DeliveryFinding"
+      },
+      "title": "Findings",
+      "type": "array"
+    },
+    "input_refs": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Input Refs",
+      "type": "array"
+    },
+    "organization_id": {
+      "minLength": 1,
+      "title": "Organization Id",
+      "type": "string"
+    },
+    "publication_id": {
+      "minLength": 1,
+      "title": "Publication Id",
+      "type": "string"
+    },
+    "ready_for_approval": {
+      "title": "Ready For Approval",
+      "type": "boolean"
+    },
+    "review_approval_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Review Approval Digest",
+      "type": "string"
+    },
+    "review_content_digest": {
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "title": "Review Content Digest",
+      "type": "string"
+    },
+    "review_id": {
+      "minLength": 1,
+      "title": "Review Id",
+      "type": "string"
+    },
+    "revision": {
+      "default": 1,
+      "minimum": 1,
+      "title": "Revision",
+      "type": "integer"
+    },
+    "schema_version": {
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "created_at",
+    "organization_id",
+    "publication_id",
+    "binding_id",
+    "review_id",
+    "review_content_digest",
+    "review_approval_digest",
+    "evaluation_refs",
+    "approval_digest",
+    "ready_for_approval"
+  ],
+  "title": "DeliveryRubricBinding",
+  "type": "object"
+}
